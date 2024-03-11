@@ -3,19 +3,27 @@
   <head>
     <title>Permissions API demo</title>
     <meta charset="utf-8">
+    <style type="text/css">
+
+    </style>
   </head>
   <body>
     <h1>State</h1>
     <div id="state"></div>
 
     <h1>Position</h1>
-    <div id="position">
-      <span id="errCode"></span>
-      <span id="errMessage"></span>
-      <span id="lat"></span>
-      <span id="lng"></span>
-      <span id="accuracy"></span>
-    </div>
+    <dl id="position">
+      <dl>Error code</dl>
+      <dd id="errCode"></dd>
+      <dl>Error message</dl>
+      <dd id="errMessage"></dd>
+      <dl>Latitude</dl>
+      <dd id="lat"></dd>
+      <dl>Longitude</dl>
+      <dd id="lng"></dd>
+      <dl>Accuracy</dl>
+      <dd id="accuracy"></dd>
+    </dl>
 
     <h1>Timestamp</h1>
     <div id="timestamp"></div>
