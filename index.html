@@ -29,6 +29,7 @@
     <div id="timestamp"></div>
 
     <button type="button" id="locate">Request position</button>
+    <button type="button" id="checkPermission">Check permission</button>
     
     <script type="text/javascript">
       var errCodeEl = document.getElementById('errCode');
@@ -97,6 +98,9 @@
       }
       
       function getPosition() {
+        clearError();
+        clearPosition();
+        
         navigator.geolocation.getCurrentPosition(
           revealPosition,
           positionDenied,
@@ -107,26 +111,19 @@
           },
         );
       }
-      
-      function handlePermission() {
-        clearError();
-        clearPosition();
+
+      function checkPermission() {
         navigator.permissions.query({ name: "geolocation" }).then((result) => {
           report(result.state);
-          if (result.state === "granted") {
-            getPosition();
-          } else if (result.state === "prompt") {
-            getPosition();
-          } else if (result.state === "denied") {
-            
-          }
+
           result.addEventListener("change", () => {
             report(result.state);
           });
         });
       }
 
-      document.getElementById('locate').addEventListener('click', handlePermission);
+      document.getElementById('checkPermission').addEventListener('click', checkPermission);
+      document.getElementById('locate').addEventListener('click', getPosition);
     </script>
   </body>
 </html>
