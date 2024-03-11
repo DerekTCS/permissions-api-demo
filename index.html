@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Permissions API demo</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1>State</h1>
+    <div id="state"></div>
+
+    <h1>Position</h1>
+    <div id="position">
+      <span id="errCode"></span>
+      <span id="errMessage"></span>
+      <span id="lat"></span>
+      <span id="lng"></span>
+      <span id="accuracy"></span>
+    </div>
+
+    <h1>Timestamp</h1>
+    <div id="timestamp"></div>
+
+    <button type="button" id="locate">Request position</button>
+    
+    <script type="text/javascript">
+      var errCodeEl = document.getElementById('errCode');
+      var errMessageEl = document.getElementById('errMessage');
+      var stateEl = document.getElementById('state');
+      var latEl = document.getElementById('lat');
+      var lngEl = document.getElementById('lng');
+      var accuracyEl = document.getElementById('accuracy');
+      var timestampEl = document.getElementById('timestamp');
+
+      function setLat(value) {
+        latEl.innerHTML = value;
+      }
+
+      function setLng(value) {
+        lngEl.innerHTML = value;
+      }
+
+      function setState(value) {
+        stateEl.innerHTML = value;
+      }
+
+      function setAccuracy(value) {
+        accuracyEl.innerHTML = value;
+      }
+
+      function setTimestamp(value) {
+        timestampEl.innerHTML = value;
+      }
+      
+      function setErrCode(value) {
+        errCodeEl.innerHTML = value;
+      }
+
+      function setErrMessage(value) {
+        errMessageEl.innerHTML = value;
+      }
+      
+      function report(state) {
+        setState(state);
+      }
+
+      function clearError()
+      {
+        setErrCode("");
+        setErrMessage("");
+      }
+
+      function clearPosition() {
+        setLat("");
+        setLng("");
+        setAccuracy("");
+        setTimestamp("");
+      }
+      
+      function revealPosition(geoPos) {
+        setLat(geoPos.coords.latitude);
+        setLng(geoPos.coords.longitude);
+        setAccuracy(geoPos.coords.accuracy);
+        setTimestamp(geoPos.timestamp);
+      }
+
+      function positionDenied(error) {
+        setErrCode(error.code);
+        setErrMessage(error.message);
+      }
+      
+      function getPosition() {
+        navigator.geolocation.getCurrentPosition(
+          revealPosition,
+          positionDenied,
+          {
+            maximumAge: 0,
+            timeout: Infinity,
+            enableHighAccuracy: true
+          },
+        );
+      }
+      
+      function handlePermission() {
+        clearError();
+        clearPosition();
+        navigator.permissions.query({ name: "geolocation" }).then((result) => {
+          report(result.state);
+          if (result.state === "granted") {
+            getPosition();
+          } else if (result.state === "prompt") {
+            getPosition();
+          } else if (result.state === "denied") {
+            
+          }
+          result.addEventListener("change", () => {
+            report(result.state);
+          });
+        });
+      }
+
+      document.getElementById('locate').addEventListener('click', handlePermission);
+    </script>
+  </body>
+</html>
